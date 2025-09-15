@@ -1,6 +1,7 @@
 """Device parsers package."""
 from typing import Dict, Type
 import logging
+
 from .atw_035_699 import SplitWater035699Parser
 from .base import BaseDeviceParser
 from .base_bean import BaseBeanParser
@@ -22,26 +23,33 @@ DEVICE_PARSERS: Dict[tuple[str, str], Type[BaseDeviceParser]] = {
     ("025", ""): HisenseWashingMachineParser,
 }
 
-def get_device_parser(device_type: str , feature_code: str) -> Type[BaseDeviceParser]:
-    """Get device parser for the given device type."""
-    _LOGGER.debug("Getting device parser for type %s", device_type)
-    if DEVICE_PARSERS.get((device_type, feature_code)):
-        _LOGGER.debug("三联供设备 %s", device_type)
-        return DEVICE_PARSERS[(device_type, feature_code)]
+def get_device_parser(device_type: str, feature_code: str) -> Type[BaseDeviceParser]:
+    """Get device parser for the given device type and feature code."""
+    _LOGGER.debug("Getting device parser for type %s, feature_code %s", device_type, feature_code)
+    
+    # Check for exact parser match first
+    parser_key = (device_type, feature_code)
+    if parser_key in DEVICE_PARSERS:
+        parser_class = DEVICE_PARSERS[parser_key]
+        _LOGGER.info("Found specific parser for device type %s, feature_code %s: %s", 
+                    device_type, feature_code, parser_class.__name__)
+        return parser_class
+    
+    # Special case: Dishwasher 015 with feature code 50.2f - ensure it's always detected
+    if device_type == "015" and feature_code == "50.2f":
+        _LOGGER.info("Explicitly returning Dishwasher015502FParser for type 015, feature_code 50.2f")
+        return Dishwasher015502FParser
+    
+    # Legacy handling for humidity devices
     if device_type == "007":
         _LOGGER.debug("除湿机设备 %s", device_type)
         return Humidity007Parser
-    # 预设的设备类型集合
+    
+    # Supported device types that can use the default parser
     supported_device_types = ["009", "008", "006", "015", "016", "025"]
     if device_type in supported_device_types:
-        parser_class = BaseBeanParser
-        _LOGGER.debug("Using default parser for device type %s", device_type)
-        # try:
-        #     static_data = await self.async_get_property_list(device_type, feature_code)
-        #     _LOGGER.debug("Static data for device %s: %s: %s", device_type, feature_code, static_data)
-        # except Exception as query_err:
-        #     _LOGGER.error("Error querying static data for device %s: %s", feature_code, query_err)
-        return parser_class
+        _LOGGER.debug("Using default BaseBeanParser for supported device type %s", device_type)
+        return BaseBeanParser
     else:
         _LOGGER.warning("Unsupported device type: %s", device_type)
         raise ValueError(f"Unsupported device type: {device_type}")
