@@ -1,10 +1,10 @@
 {
-    "title": "海信空调",
+    "title": "海信ConnectLife插件",
     "config": {
         "step": {
             "user": {
-                "title": "连接到海信空调",
-                "description": "您即将将您的海信空调（{app_name}）连接到 Home Assistant。\n\n应用程序 ID：{app_id}\n\n请确保您的 Home Assistant 实例可以通过以下地址访问：\n{oauth_callback_url}\n\n点击提交开始认证流程。",
+                "title": "连接到海信ConnectLife",
+                "description": "您即将将您的海信ConnectLife智能设备（{app_name}）连接到 Home Assistant。\n\n应用程序 ID：{app_id}\n\n请确保您的 Home Assistant 实例可以通过以下地址访问：\n{oauth_callback_url}\n\n点击提交开始认证流程。",
                 "data": {
                     "confirm_auth": "是的，我要开始认证"
                 }
@@ -22,7 +22,7 @@
     "options": {
         "step": {
             "init": {
-                "title": "海信空调选项",
+                "title": "海信ConnectLife选项",
                 "description": "{message}",
                 "data": {
                     "refresh_devices": "刷新设备列表",
