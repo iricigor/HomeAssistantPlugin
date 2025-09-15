@@ -16,10 +16,10 @@ class Dishwasher015502FParser(BaseDeviceParser):
     @property
     def attributes(self) -> Dict[str, DeviceAttribute]:
         return {
-            # Program/Status attributes - common dishwasher status keys
-            "program": DeviceAttribute(
-                key="program",
-                name="Current Program",
+            # Program/Status attributes - mapped to actual ConnectLife API keys
+            "Current_program_phase": DeviceAttribute(
+                key="Current_program_phase",
+                name="Current Program Phase",
                 attr_type="Enum",
                 step=1,
                 value_map={
@@ -35,9 +35,30 @@ class Dishwasher015502FParser(BaseDeviceParser):
                 read_write="R"
             ),
             
-            "state": DeviceAttribute(
-                key="state",
-                name="Dishwasher State",
+            "Door_status": DeviceAttribute(
+                key="Door_status",
+                name="Door Status",
+                attr_type="Enum",
+                step=1,
+                value_map={
+                    "0": "Closed",
+                    "1": "Open"
+                },
+                read_write="R"
+            ),
+            
+            "Remaining_time": DeviceAttribute(
+                key="Remaining_time",
+                name="Remaining Time",
+                attr_type="Number",
+                step=1,
+                value_range="0~300",  # 0-300 minutes
+                read_write="R"
+            ),
+            
+            "Machine_state": DeviceAttribute(
+                key="Machine_state",
+                name="Machine State",
                 attr_type="Enum",
                 step=1,
                 value_map={
@@ -50,31 +71,10 @@ class Dishwasher015502FParser(BaseDeviceParser):
                 read_write="R"
             ),
             
-            "remaining_time": DeviceAttribute(
-                key="remaining_time",
-                name="Remaining Time",
-                attr_type="Number",
-                step=1,
-                value_range="0~300",  # 0-300 minutes
-                read_write="R"
-            ),
-            
-            "door": DeviceAttribute(
-                key="door",
-                name="Door Status",
-                attr_type="Enum",
-                step=1,
-                value_map={
-                    "0": "Closed",
-                    "1": "Open"
-                },
-                read_write="R"
-            ),
-            
             # Control attributes
-            "power": DeviceAttribute(
-                key="power",
-                name="Power",
+            "Power_state": DeviceAttribute(
+                key="Power_state",
+                name="Power State",
                 attr_type="Enum",
                 step=1,
                 value_map={
@@ -84,8 +84,8 @@ class Dishwasher015502FParser(BaseDeviceParser):
                 read_write="RW"
             ),
             
-            "selected_program": DeviceAttribute(
-                key="selected_program",
+            "Selected_program": DeviceAttribute(
+                key="Selected_program",
                 name="Selected Program",
                 attr_type="Enum",
                 step=1,
@@ -99,8 +99,8 @@ class Dishwasher015502FParser(BaseDeviceParser):
             ),
             
             # Temperature setting
-            "temperature": DeviceAttribute(
-                key="temperature",
+            "Water_temperature": DeviceAttribute(
+                key="Water_temperature",
                 name="Water Temperature",
                 attr_type="Enum",
                 step=1,
@@ -115,8 +115,8 @@ class Dishwasher015502FParser(BaseDeviceParser):
             ),
             
             # Error code
-            "error_code": DeviceAttribute(
-                key="error_code",
+            "Error_code": DeviceAttribute(
+                key="Error_code",
                 name="Error Code",
                 attr_type="Number",
                 step=1,
@@ -125,8 +125,8 @@ class Dishwasher015502FParser(BaseDeviceParser):
             ),
             
             # Water level/pressure
-            "water_level": DeviceAttribute(
-                key="water_level",
+            "Water_level": DeviceAttribute(
+                key="Water_level",
                 name="Water Level",
                 attr_type="Enum",
                 step=1,
@@ -139,8 +139,8 @@ class Dishwasher015502FParser(BaseDeviceParser):
             ),
             
             # Rinse aid level
-            "rinse_aid": DeviceAttribute(
-                key="rinse_aid",
+            "Rinse_aid_level": DeviceAttribute(
+                key="Rinse_aid_level",
                 name="Rinse Aid Level",
                 attr_type="Enum",
                 step=1,
@@ -154,8 +154,8 @@ class Dishwasher015502FParser(BaseDeviceParser):
             ),
             
             # Salt level
-            "salt_level": DeviceAttribute(
-                key="salt_level",
+            "Salt_level": DeviceAttribute(
+                key="Salt_level",
                 name="Salt Level",
                 attr_type="Enum",
                 step=1,
@@ -169,8 +169,8 @@ class Dishwasher015502FParser(BaseDeviceParser):
             ),
             
             # Additional options
-            "extra_rinse": DeviceAttribute(
-                key="extra_rinse",
+            "Extra_rinse": DeviceAttribute(
+                key="Extra_rinse",
                 name="Extra Rinse",
                 attr_type="Enum",
                 step=1,
@@ -181,12 +181,37 @@ class Dishwasher015502FParser(BaseDeviceParser):
                 read_write="RW"
             ),
             
-            "delay_start": DeviceAttribute(
-                key="delay_start",
+            "Delay_start_hours": DeviceAttribute(
+                key="Delay_start_hours",
                 name="Delay Start (Hours)",
                 attr_type="Number",
                 step=1,
                 value_range="0~24",
                 read_write="RW"
             )
+            
+            # Commented out attributes with no direct mapping yet:
+            # These would need to be mapped once we have the actual API dump
+            
+            # "Cycle_count": DeviceAttribute(
+            #     key="Cycle_count",
+            #     name="Cycle Count",
+            #     attr_type="Number",
+            #     step=1,
+            #     value_range="0~9999",
+            #     read_write="R"
+            # ),
+            
+            # "Filter_status": DeviceAttribute(
+            #     key="Filter_status",
+            #     name="Filter Status",
+            #     attr_type="Enum",
+            #     step=1,
+            #     value_map={
+            #         "0": "Clean",
+            #         "1": "Needs Cleaning",
+            #         "2": "Blocked"
+            #     },
+            #     read_write="R"
+            # )
         }
