@@ -646,7 +646,7 @@ class HisenseApiClient:
                                 data, failed_data, failed_list)
                     else:
                         _LOGGER.warning(
-                            "Skipping unsupported device type:\n%s",
+                            "MYDEBUG Not adding device due to unsupported type:\n%s",
                             device.debug_info()
                         )
                 except Exception as device_err:
